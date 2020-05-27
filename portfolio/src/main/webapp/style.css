@@ -10,6 +10,27 @@
 
 body {
     background-color:white;
+    font-family: "Raleway", "Helvetica Neue", Garamond, Helvetica, Arial, sans-serif;
+    text-align: center;
+}
+
+.center {
+    text-align: center;
+}
+
+.row-align {
+    display: flex;
+}
+
+.bio {
+    width: 1400px;
+    margin: 0px auto;
+}
+
+.title-bio {
+    margin-top: 300px;
+    margin-left: 100px;
+    width: 700px;
 }
 
 ul {
@@ -20,7 +41,7 @@ ul {
 
 header, footer {
     background-color: white;
-    font-family: Arial, Helvetica, sans-serif
+    font-family: "Raleway", "Helvetica Neue", Garamond, Helvetica, Arial, sans-serif;
 }
 
 header li , footer li{
