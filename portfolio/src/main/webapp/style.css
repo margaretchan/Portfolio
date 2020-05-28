@@ -59,14 +59,7 @@ body {
     line-height: 50px;
 }
 
-.btn {
-    font: inherit;
-    touch-action: manipulation;
-    color:green;
-    border: 2px solid green;
-}
-
-.btn:hover{
+.btn-outline:hover{
     color: white;
     background-color: green;
 }
@@ -78,6 +71,16 @@ body {
     padding-right: 25px;
     padding-left:25px;
     margin: 13px;
+    font: inherit;
+    touch-action: manipulation;
+    color:green;
+    border: 2px solid green;
+}
+
+.btn {
+    background-color: transparent;
+    color: black;
+    text-decoration: none;
 }
 
 .fact-container {
@@ -104,7 +107,7 @@ header li , footer li{
     display: inline;
 }
 
-header li a , footer li a{
+header li a , footer li a {
     padding: 10px;
     background-color: transparent;
     color: black;
@@ -112,7 +115,7 @@ header li a , footer li a{
     font-size: 22px;
 }
 
-header li a:hover , footer li a:hover {
+header li a:hover , footer li a:hover, .btn:hover {
     color: green;
     text-decoration: none;
 }
