@@ -4,33 +4,80 @@
     width: 800px;
 }
 
-#greeting-container {
-    margin-top: 20px;
-}
-
 body {
-    background-color:white;
+    background-color:transparent;
     font-family: "Raleway", "Helvetica Neue", Garamond, Helvetica, Arial, sans-serif;
+}
+
+.center, footer {
     text-align: center;
 }
 
-.center {
-    text-align: center;
+.align-left {
+    text-align: left;
 }
 
 .row-align {
     display: flex;
 }
 
-.bio {
+.margin-side-50 {
+    margin-right: 50px;
+    margin-left: 50px;
+}
+
+.main {
     width: 1400px;
     margin: 0px auto;
 }
 
+.page-title {
+    font-size: 32px;
+}
+
+.reg-text-size {
+    font-size: 22px;
+}
+
+.title-margin {
+    margin-left: 30px;
+    margin-top: 0px;
+}
+
 .title-bio {
     margin-top: 300px;
-    margin-left: 100px;
+    margin-left: 50px;
     width: 700px;
+}
+
+.about-bio {
+    width: 700px;
+    line-height: 50px;
+}
+
+.btn {
+    font: inherit;
+    touch-action: manipulation;
+    color:green;
+    border: 2px solid green;
+}
+
+.btn:hover{
+    color: white;
+    background-color: green;
+}
+
+.btn-outline {
+    line-height: 24px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    padding-right: 25px;
+    padding-left:25px;
+    margin: 13px;
+}
+
+.fact-container {
+    color: green;
 }
 
 ul {
@@ -40,7 +87,7 @@ ul {
 }
 
 header, footer {
-    background-color: white;
+    background-color: transparent;
     font-family: "Raleway", "Helvetica Neue", Garamond, Helvetica, Arial, sans-serif;
 }
 
@@ -49,8 +96,14 @@ header li , footer li{
 }
 
 header li a , footer li a{
-    padding: 8px;
-    background-color: white;
+    padding: 10px;
+    background-color: transparent;
     color: black;
+    text-decoration: none;
+    font-size: 22px;
+}
+
+header li a:hover , footer li a:hover {
+    color: green;
     text-decoration: none;
 }

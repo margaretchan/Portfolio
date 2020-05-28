@@ -22,20 +22,27 @@
     <hr>
 
     <body>
-        <div id="bio">
-            <h1>About Margaret</h1>
-            <p>
-            Hello and welcome! I'm a proud Cornellian who loves climbing peices of plastic bolted 
-            to walls (some call this rock climbing). When I'm not doing that, you can probably find 
-            me playing tennis, walking my dog or, if its this Wednesday, watching the rocket launch!
-            </p>
+        <div class="page-title title-margin"><h1>About Me</h1></div>
 
-            <p>This is my dog Ollie and I!</p>
-            <img src="images/ollie-1.jpg" alt="Ollie and Margaret" width="500" height="700"/>
+        <div class="row-align center main reg-text-size">
+            <div class="about-bio align-left margin-side-50"><p>
+                Hello and welcome! I'm a proud Cornellian who loves climbing peices of plastic bolted 
+                to walls (some call this rock climbing). When I'm not doing that, you can probably find 
+                me playing tennis, walking my dog or, if its this Wednesday, watching the rocket launch!
+            </p></div>
 
-            <p>Click here to learn more about me:</p>
-            <button onclick="addRandomFact()">Tell me more!</button>
-            <div id="fact-container"></div>
+            <div id="ollie-picture">
+                <img src="images/ollie-1.jpg" alt="Ollie and Margaret" width="375px" height="500px"/>
+                <p>My dog Ollie and I!</p>
+            </div> 
+            <br>
+        </div>
+
+        <div class="center reg-text-size" id="random-fact">
+            <a class="btn btn-outline" onclick="addRandomFact()" width="200px">Tell Me More!</a>
+            <br><br><br>
+            <div id="fact-container" class="fact-container"></div>
+            <br>
         </div>
 
     </body>
