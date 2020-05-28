@@ -122,6 +122,10 @@ ul {
     padding: 0;
 }
 
+.sticky {
+    position: fixed;
+}
+
 header, footer {
     background-color: transparent;
     font-family: "Raleway", "Helvetica Neue", Garamond, Helvetica, Arial, sans-serif;
