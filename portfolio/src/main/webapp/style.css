@@ -21,12 +21,17 @@ body {
     display: flex;
 }
 
+.margin-side-30 {
+    margin-right: 30px;
+    margin-left: 30px;
+}
+
 .margin-side-50 {
     margin-right: 50px;
     margin-left: 50px;
 }
 
-.main {
+.main-container {
     width: 1400px;
     margin: 0px auto;
 }
@@ -54,9 +59,28 @@ body {
     width: 700px;
 }
 
+.about-container {
+    width: 1075px;
+    margin: 0px auto;
+}
+
 .about-bio {
     width: 700px;
     line-height: 50px;
+}
+
+.project-container {
+    width: 1200px;
+    margin: 0px auto;
+}
+
+.project-desc {
+    height: 300px;
+    line-height: 40px;
+}
+
+.crt-project-desc {
+    width: 320px;
 }
 
 .btn-outline:hover{

@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Projects</title>
+        <title>Margaret Chan | Projects</title>
         <link rel="stylesheet" href="style.css">
         <script src="script.js"></script>
     </head>
@@ -24,17 +24,42 @@
     <body>
         <div class="page-title title-margin"><h1>Projects</h1></div>
 
-        <div class="project-list margin-side-50">
+        <div class="project-list">
             <ul>
-                <li> 
-                    <h2>Cornell Rocketry Team</h2>
-                    <h3>Antenna Array</h3>
-                    <p>antenna array description</p>
-                    <h3>Ground Station</h3>
-                    <p>ground station comms description</p>
-                </li><li>
-                    <h2>Crossy Caml Game</h2>
-                    <p>crossy caml description</p>
+                <li><hr class="margin-side-50">
+                <div class="center">
+                    <div class="header-text-size">
+                        <h2><a class="btn" href="https://cornellrocketryteam.com/" target="_blank">Cornell Rocketry Team</a></h2>
+                    </div>
+                    <div class="reg-text-size row-align center project-container">
+                        <div id="gui" class="margin-side-30 project-desc crt-project-desc">
+                            <h3>Mission Control GUI</h3>
+                            <p>	A GUI for live data display during flight, also allowing for users to send commands to the rocket.
+                                Built in Java using the libGDX library.
+                            <p>
+                        </div>
+                        <div id="antennas-array" class="margin-side-30 project-desc crt-project-desc">
+                            <h3>Antennas Array</h3>
+                            <p>An automatically orienting antenna system for real-time rocket tracking. Controlled by an Arduino.<p>
+                        </div>
+                        <div id="comms" class="margin-side-30 project-desc crt-project-desc">
+                            <h3>Ground&nbsp;Station&nbsp;Communications</h3>
+                            <p>The ground station side of the ground-rocket 2 way communication system. Built with a RESTful API in python using the Flask framework.<p>
+                        </div>
+                        <br><br>
+                    </div>
+                </div>
+                </li><li><hr class="margin-side-50">
+                	<div class="center">
+                	    <div class="header-text-size">
+                   	    	<h2><a class="btn" href="https://github.com/margaretchan/Crossy-Caml" target="_blank">Crossy Caml Game</a></h2>
+                	    </div>
+                	    <div class="center reg-text-size project-container project-desc"><p>
+                            Have you ever played Crossy Road and thought: I wish this chicken was a camel and these cars were Pokemon?
+                            Well today's your lucky day! We present Crossy Caml, a game based on Crossy Road but built in OCaml.
+                            Download and play today!
+                        </p></div>
+                	</div>
                 </li>
             </ul>
         </div>
