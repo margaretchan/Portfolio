@@ -35,6 +35,10 @@ body {
     font-size: 32px;
 }
 
+.header-text-size {
+    font-size: 26px;
+}
+
 .reg-text-size {
     font-size: 22px;
 }
@@ -78,6 +82,11 @@ body {
 
 .fact-container {
     color: green;
+}
+
+.logo-size-campus {
+    width: 175px;
+    height: 175px;
 }
 
 ul {
