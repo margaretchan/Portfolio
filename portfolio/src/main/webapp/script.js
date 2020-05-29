@@ -28,16 +28,18 @@ function addRandomFact() {
     FACT_CONTAINER.innerText = FACT;
 }
 
-/*
-fetch("/home/cmargaret/step/portfolio/src/main/webapp/header.html")
-  .then(data => {
-      console.log("this is my data");
-      console.log(typeof(data));
-    document.querySelector("header").innerHTML = data.text();
-  });
+fetch("header.html")
+    .then(response => {
+        return response.text();
+    })
+    .then(data => {
+        document.querySelector("header").innerHTML = data;
+    });
 
-fetch("./footer.html")
-  .then(data => {
-    document.querySelector("footer").innerHTML = data.text();
-  });
-*/
+fetch("footer.html")
+    .then(response => {
+        return response.text();
+    })
+    .then(data => {
+        document.querySelector("footer").innerHTML = data;
+    });
