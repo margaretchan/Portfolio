@@ -28,6 +28,9 @@ function addRandomFact() {
     FACT_CONTAINER.innerText = FACT;
 }
 
+/**
+ * Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively
+ */
 fetch("header.html")
     .then(response => {
         return response.text();
