@@ -13,16 +13,17 @@
 // limitations under the License.
 
 /**
- * Adds a random greeting to the page.
+ * Adds a random personal fact to the page.
  */
 function addRandomFact() {
-  const facts =
-      ['Dogs are (usually) better than cats', 'Brooklyn 99 is a great TV show', 'Milk is underrated', 'I\'m a ravenclaw'];
+    const FACTS =
+        ['Dogs are (usually) better than cats', 'Brooklyn 99 is a great TV show', 'Milk is underrated', 'I\'m a ravenclaw'];
 
-  // Pick a random greeting.
-  const fact = facts[Math.floor(Math.random() * facts.length)];
+    // Pick a random fact.
+    const FACT = FACTS[Math.floor(Math.random() * FACTS.length)];
 
-  // Add it to the page.
-  const factContainer = document.getElementById('fact-container');
-  factContainer.innerText = fact;
+    // Add it to the page.
+    const FACT_CONTAINER = document.getElementById("fact-container");
+
+    FACT_CONTAINER.innerText = FACT;
 }

@@ -1,9 +1,145 @@
 #content {
-  margin-left: auto;
-  margin-right: auto;
-  width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 800px;
 }
 
-#greeting-container {
-  margin-top: 20px;
+body {
+    background-color:transparent;
+    font-family: "Raleway", "Helvetica Neue", Garamond, Helvetica, Arial, sans-serif;
+}
+
+.center, footer {
+    text-align: center;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.row-align {
+    display: flex;
+}
+
+.margin-side-30 {
+    margin-right: 30px;
+    margin-left: 30px;
+}
+
+.margin-side-50 {
+    margin-right: 50px;
+    margin-left: 50px;
+}
+
+.main-container {
+    width: 1400px;
+    margin: 0px auto;
+}
+
+.page-title {
+    font-size: 32px;
+}
+
+.header-text-size {
+    font-size: 26px;
+}
+
+.reg-text-size {
+    font-size: 22px;
+}
+
+.title-margin {
+    margin-left: 30px;
+    margin-top: 0px;
+}
+
+.title-bio {
+    margin-top: 300px;
+    margin-left: 50px;
+    width: 700px;
+}
+
+.about-container {
+    width: 1075px;
+    margin: 0px auto;
+}
+
+.about-bio {
+    width: 700px;
+    line-height: 50px;
+}
+
+.project-container {
+    width: 1200px;
+    margin: 0px auto;
+}
+
+.project-desc {
+    height: 300px;
+    line-height: 40px;
+}
+
+.crt-project-desc {
+    width: 320px;
+}
+
+.btn-outline:hover{
+    color: white;
+    background-color: green;
+}
+
+.btn-outline {
+    line-height: 24px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    padding-right: 25px;
+    padding-left:25px;
+    margin: 13px;
+    font: inherit;
+    touch-action: manipulation;
+    color:green;
+    border: 2px solid green;
+}
+
+.btn {
+    background-color: transparent;
+    color: black;
+    text-decoration: none;
+}
+
+.fact-container {
+    color: green;
+}
+
+.logo-size-campus {
+    width: 175px;
+    height: 175px;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+header, footer {
+    background-color: transparent;
+    font-family: "Raleway", "Helvetica Neue", Garamond, Helvetica, Arial, sans-serif;
+}
+
+header li , footer li{
+    display: inline;
+}
+
+header li a , footer li a {
+    padding: 10px;
+    background-color: transparent;
+    color: black;
+    text-decoration: none;
+    font-size: 22px;
+}
+
+header li a:hover , footer li a:hover, .btn:hover {
+    color: green;
+    text-decoration: none;
 }
