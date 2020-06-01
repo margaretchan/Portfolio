@@ -6,7 +6,7 @@
 
 body {
     background-color:transparent;
-    font-family: "Raleway", "Helvetica Neue", Garamond, Helvetica, Arial, sans-serif;
+    font-family: "Raleway", Garamond, Helvetica, Arial, sans-serif;
 }
 
 .center, footer {
@@ -122,9 +122,13 @@ ul {
     padding: 0;
 }
 
+.sticky {
+    position: fixed;
+}
+
 header, footer {
     background-color: transparent;
-    font-family: "Raleway", "Helvetica Neue", Garamond, Helvetica, Arial, sans-serif;
+    font-family: "Raleway", Garamond, Helvetica, Arial, sans-serif;
 }
 
 header li , footer li{

@@ -17,7 +17,7 @@
  */
 function addRandomFact() {
     const FACTS =
-        ['Dogs are (usually) better than cats', 'Brooklyn 99 is a great TV show', 'Milk is underrated', 'I\'m a ravenclaw'];
+        ['Dogs are (usually) better than cats.', 'Brooklyn 99 is one of the best shows of all time.', 'Milk is underrated.', 'I\'m a ravenclaw.'];
 
     // Pick a random fact.
     const FACT = FACTS[Math.floor(Math.random() * FACTS.length)];
@@ -27,3 +27,22 @@ function addRandomFact() {
 
     FACT_CONTAINER.innerText = FACT;
 }
+
+/**
+ * Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively
+ */
+fetch("header.html")
+    .then(response => {
+        return response.text();
+    })
+    .then(data => {
+        document.querySelector("header").innerHTML = data;
+    });
+
+fetch("footer.html")
+    .then(response => {
+        return response.text();
+    })
+    .then(data => {
+        document.querySelector("footer").innerHTML = data;
+    });
