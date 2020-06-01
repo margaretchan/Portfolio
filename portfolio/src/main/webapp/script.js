@@ -34,10 +34,10 @@ function addRandomFact() {
 function getRandomGreeting() {
     fetch("/data")
         .then(greetingProm => {
-            return greetingProm.text();
+            return greetingProm.json();
         })
-        .then(text => {
-            document.querySelector("#greeting-container").innerHTML = text;
+        .then(json => {
+            document.querySelector("#greeting-container").innerHTML = json;
         })
 }
 
