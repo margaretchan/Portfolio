@@ -29,16 +29,32 @@ function addRandomFact() {
 }
 
 /**
- * Fetches randomized greeting from /data and prints in index.html greeting-container
+ * Fetches user comment and comment history to be displayed
  */
-function getRandomGreeting() {
-    fetch("/data")
-        .then(greetingProm => {
-            return greetingProm.json();
+function getComments() {
+    fetch("/comments")
+        .then(inputProm => {
+            return inputProm.json();
         })
-        .then(json => {
-            document.querySelector("#greeting-container").innerHTML = json;
+        .then(inputJson => {
+            const COMM_CONTAINER = document.getElementById("old-comments");
+            console.log(typeof(inputJson));
+            console.log(typeof(inputJson.comments));
+            inputJson.forEach((line) => {
+                COMM_CONTAINER.appendChild(createListElement(line));
+            });
+
         })
+}
+
+/** 
+ *  Creates a <li> element containing text. 
+ *  (helper method borrowed from example file)
+ */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }
 
 /**
