@@ -28,6 +28,9 @@ function addRandomFact() {
     FACT_CONTAINER.innerText = FACT;
 }
 
+/**
+ * Fetches randomized greeting from /data and prints in index.html greeting-container
+ */
 function getRandomGreeting() {
     fetch("/data")
         .then(greetingProm => {
