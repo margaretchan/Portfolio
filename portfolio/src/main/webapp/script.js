@@ -28,6 +28,16 @@ function addRandomFact() {
     FACT_CONTAINER.innerText = FACT;
 }
 
+function getRandomGreeting() {
+    fetch("/data")
+        .then(greetingProm => {
+            return greetingProm.text();
+        })
+        .then(text => {
+            document.querySelector("#greeting-container").innerHTML = text;
+        })
+}
+
 /**
  * Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively
  */
