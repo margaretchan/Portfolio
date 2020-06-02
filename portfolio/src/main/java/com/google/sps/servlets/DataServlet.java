@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/comments")
 public class DataServlet extends HttpServlet {
 
+    // arraylist which stores all past comments
     private List<String> comments;
 
     @Override
@@ -36,6 +37,7 @@ public class DataServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // convert self object to json and print on /comment page
         Gson gson = new Gson();
         response.setContentType("application/json;");
         response.getWriter().println(gson.toJson(this));
@@ -43,9 +45,11 @@ public class DataServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // add new comment to arraylist
         String newComment = request.getParameter("user-comment");
         comments.add(newComment);
 
+        // redirect back to comment page
         response.sendRedirect("/blog.html");
     }
 }
