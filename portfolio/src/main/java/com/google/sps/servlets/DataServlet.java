@@ -30,16 +30,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/** Servlet responsible for listing comments */
 @WebServlet("/comments")
 public class DataServlet extends HttpServlet {
 
     // arraylist which stores all past comments
     private List<String> comments;
 
-    @Override
-    public void init(){
-    } 
-
+    /** GET request pulls comments from datastore and prints on /comments page */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Query query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
@@ -47,7 +45,10 @@ public class DataServlet extends HttpServlet {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastore.prepare(query);
 
+        // initialize new arraylist every time so no duplicates
         comments = new ArrayList<>();
+        
+        // iterate through Query and add to arraylist
         for (Entity entity : results.asIterable()) {
             String comment = (String) entity.getProperty("text");
             comments.add(comment);
@@ -59,6 +60,7 @@ public class DataServlet extends HttpServlet {
         response.getWriter().println(gson.toJson(this));
     }
 
+    /** POST request sends new user-inputted comment to datastore */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String newComment = request.getParameter("user-comment");
@@ -67,6 +69,8 @@ public class DataServlet extends HttpServlet {
         // create datastore entity for new comment
         Entity commentEntity = new Entity("Comment");
         commentEntity.setProperty("text", newComment);
+
+        // add timestamp for sorting
         commentEntity.setProperty("timestamp", currTime);
 
         // put entity into datastore for access after reload
