@@ -21,6 +21,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
@@ -35,12 +36,12 @@ import javax.servlet.http.HttpServletResponse;
 public class DataServlet extends HttpServlet {
 
     // arraylist which stores all past comments
-    private List<String> comments;
+    protected List<String> comments;
 
     /** GET request pulls comments from datastore and prints on /comments page */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Query query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
+        Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastore.prepare(query);
@@ -54,10 +55,31 @@ public class DataServlet extends HttpServlet {
             comments.add(comment);
         }
 
+        // get only the requested max number of comments
+        comments = comments.subList(0, getBoundedMaxComments(request));
+
+        // reverse order to oldest first
+        Collections.reverse(comments);
+
         // convert self object to json and print on /comment page
         Gson gson = new Gson();
         response.setContentType("application/json;");
         response.getWriter().println(gson.toJson(this));
+    }
+
+    /** Parses user-requested max number of comments and bound [0, num comments] with default 5 (if there are 5) */
+    private int getBoundedMaxComments(HttpServletRequest request) {
+        int requestedComments = 5;
+        String inputMaxComments = request.getParameter("max-comments");
+        if (inputMaxComments != null) {
+            requestedComments = Integer.parseInt(inputMaxComments);
+        } 
+
+        int commentsLen = comments.size();
+        if (requestedComments > commentsLen && requestedComments >= 0) {
+            return commentsLen;
+        }
+        return requestedComments;
     }
 
     /** POST request sends new user-inputted comment to datastore */

@@ -19,9 +19,13 @@
         </div>
 
         <div id="comments" class="margin-side-50"> 
-            <div class="header-text-size center"><h2>Comments</h2></div>
+            <div class="header-text-size"><h2>Comments</h2></div>
             <br><br>
             <ul id="old-comments" class="reg-text-size margin-side-50"></ul>
+            <br><br>
+
+            <label for="max-comments" class="reg-text-size">Show Comments</label>
+            <input type="number" name="comment-limit" id="comment-limit" min="0" max="50" value="5" onchange="setMaxComments()" onload="setMaxComments">
             <br><br>
 
             <form action="/comments" method="POST">
