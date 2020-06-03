@@ -47,6 +47,9 @@ function getComments() {
         })
 }
 
+/**
+ * Fetches user-inputted comment limit and comment history to be displayed
+ */
 function setMaxComments() {
     const COMM_LIMIT = document.getElementById("comment-limit");
     fetch("/comments?max-comments=" + COMM_LIMIT.value)
