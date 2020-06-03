@@ -29,6 +29,19 @@ function addRandomFact() {
 }
 
 /**
+ * Fetches randomized greeting from /data and prints in index.html greeting-container
+ */
+function getRandomGreeting() {
+    fetch("/data")
+        .then(greetingProm => {
+            return greetingProm.json();
+        })
+        .then(json => {
+            document.querySelector("#greeting-container").innerHTML = json;
+        })
+}
+
+/**
  * Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively
  */
 fetch("header.html")
