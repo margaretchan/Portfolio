@@ -36,8 +36,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/comments")
 public class DataServlet extends HttpServlet {
 
-    private ArrayList<String> comments;
-
     /** GET request pulls comments from datastore and prints on /comments page */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -46,10 +44,9 @@ public class DataServlet extends HttpServlet {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastore.prepare(query);
 
-        // initialize new ArrayList every time so no leftover comments from previous iterations
-        comments = new ArrayList<>();
+        // new arraylist everytime to keep thread safe
+        ArrayList<String> comments = new ArrayList<>();
         
-        // iterate through Query and add to set
         for (Entity entity : results.asIterable()) {
             String comment = (String) entity.getProperty("text");
             comments.add(comment);
@@ -58,7 +55,7 @@ public class DataServlet extends HttpServlet {
         // convert self object to json and print on /comment page
         Gson gson = new Gson();
         response.setContentType("application/json;");
-        response.getWriter().println(gson.toJson(this));
+        response.getWriter().println(gson.toJson(comments));
     }
 
     /** POST request sends new user-inputted comment to datastore */
@@ -78,7 +75,6 @@ public class DataServlet extends HttpServlet {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.put(commentEntity);
 
-        // redirect back to comment page
         response.sendRedirect("/blog.html");
     }
 }

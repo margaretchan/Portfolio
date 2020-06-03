@@ -16,29 +16,25 @@
 function addRandomFact() {
     const FACTS =
         ['Dogs are (usually) better than cats.', 'Brooklyn 99 is one of the best shows of all time.', 'Milk is underrated.', 'I\'m a ravenclaw.'];
-
-    // Pick a random fact.
     const FACT = FACTS[Math.floor(Math.random() * FACTS.length)];
-
-    // Add it to the page.
-    const factContainer = document.getElementById("fact-container");
+    var factContainer = document.getElementById("fact-container");
 
     factContainer.innerText = FACT;
 }
 
 /** Fetches user comment and comment history to be displayed */
 async function getComments() {
-    const inputResponse = await fetch("/comments");
-    const servletJson = await inputResponse.json();
-    const commentContainer = document.getElementById("old-comments");
-    servletJson.comments.forEach(line => {
+    var inputResponse = await fetch("/comments");
+    var servletJson = await inputResponse.json();
+    var commentContainer = document.getElementById("old-comments");
+    servletJson.forEach(line => {
         commentContainer.appendChild(createListElement(line));
     });
 }
 
 /** Creates a <li> element containing text. (helper method borrowed from example file) */
 function createListElement(text) {
-    const liElement = document.createElement('li');
+    var liElement = document.createElement('li');
     liElement.innerText = text;
     return liElement;
 }
@@ -51,11 +47,11 @@ function loadBlogPage() {
 
 /** Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively */
 async function loadHeaderFooter() {
-    const headerResponse = await fetch("header.html");
-    const headerData = await headerResponse.text();
+    var headerResponse = await fetch("header.html");
+    var headerData = await headerResponse.text();
     document.querySelector("header").innerHTML = headerData;
 
-    const footerResponse = await fetch("footer.html");
-    const footerData = await footerResponse.text();
+    var footerResponse = await fetch("footer.html");
+    var footerData = await footerResponse.text();
     document.querySelector("footer").innerHTML = footerData;
 }
