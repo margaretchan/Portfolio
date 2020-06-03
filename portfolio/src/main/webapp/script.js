@@ -32,17 +32,12 @@ function addRandomFact() {
  * Fetches user comment and comment history to be displayed
  */
 function getComments() {
-    console.log("Trying to get comments");
     fetch("/comments")
         .then(inputProm => {
-            console.log("got promise");
             return inputProm.json();
         })
         .then(servletJson => {
             const COMM_CONTAINER = document.getElementById("old-comments");
-            // COMM_CONTAINER.innerHTML = servletJson.comments;
-            // console.log(typeof(servletJson));
-            // console.log(typeof(servletJson.comments));
             servletJson.comments.forEach((line) => {
                 COMM_CONTAINER.appendChild(createListElement(line));
             });
@@ -58,6 +53,10 @@ function createListElement(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
   return liElement;
+}
+
+function deleteComments() {
+    fetch("/delete-data")
 }
 
 /**
