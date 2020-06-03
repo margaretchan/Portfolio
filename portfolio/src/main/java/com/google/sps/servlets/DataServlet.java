@@ -16,6 +16,7 @@ package com.google.sps.servlets;
 
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -31,11 +32,7 @@ public class DataServlet extends HttpServlet {
 
     @Override
     public void init(){
-        greetings = new ArrayList<>();
-        greetings.add("Hello Margaret");
-        greetings.add("Have a great day");
-        greetings.add("Stay safe");
-        greetings.add("Remember to drink water");
+        greetings = Arrays.asList("Hello Margaret", "Have a great day", "Stay safe", "Remember to drink water");
     } 
 
     @Override
