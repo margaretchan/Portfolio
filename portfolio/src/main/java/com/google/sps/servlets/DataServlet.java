@@ -21,9 +21,11 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
-import java.util.ArrayList;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Comparator;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,8 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/comments")
 public class DataServlet extends HttpServlet {
 
-    // arraylist which stores all past comments
-    private List<String> comments;
+    private ArrayList<String> comments;
 
     /** GET request pulls comments from datastore and prints on /comments page */
     @Override
@@ -45,10 +46,10 @@ public class DataServlet extends HttpServlet {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastore.prepare(query);
 
-        // initialize new arraylist every time so no duplicates
+        // initialize new ArrayList every time so no leftover comments from previous iterations
         comments = new ArrayList<>();
         
-        // iterate through Query and add to arraylist
+        // iterate through Query and add to set
         for (Entity entity : results.asIterable()) {
             String comment = (String) entity.getProperty("text");
             comments.add(comment);
