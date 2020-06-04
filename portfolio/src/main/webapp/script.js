@@ -39,12 +39,6 @@ function createListElement(text) {
     return liElement;
 }
 
-/** combines loading header, footer, and comments for blog page */
-function loadBlogPage() {
-    loadHeaderFooter();
-    getComments();
-}
-
 /** Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively */
 async function loadHeaderFooter() {
     var headerResponse = await fetch("header.html");
@@ -55,3 +49,5 @@ async function loadHeaderFooter() {
     var footerData = await footerResponse.text();
     document.querySelector("footer").innerHTML = footerData;
 }
+
+loadHeaderFooter();
