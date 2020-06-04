@@ -46,7 +46,5 @@ public class DeleteDataServlet extends HttpServlet {
             Key commentKey = entity.getKey();
             datastore.delete(commentKey);
         }
-
-        response.getWriter().println("");
     }
 }

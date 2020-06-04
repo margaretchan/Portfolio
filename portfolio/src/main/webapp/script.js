@@ -24,7 +24,7 @@ function addRandomFact() {
 
 /** Fetches user comment and comment history to be displayed */
 async function getComments() {
-    var inputResponse = await fetch("/comments");
+    var inputResponse = await fetch("/comments/");
     var servletJson = await inputResponse.json();
     var commentContainer = document.getElementById("old-comments");
     commentContainer.innerHTML = "";
