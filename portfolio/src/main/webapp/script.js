@@ -50,13 +50,16 @@ function getComments() {
  *  (helper method borrowed from example file)
  */
 function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
+    var liElement = document.createElement('li');
+    liElement.innerText = text;
+    return liElement;
 }
 
-function deleteComments() {
-    fetch("/delete-data")
+async function deleteComments() {
+    var response = await fetch("/delete-data", {method: "POST"});
+    var json = await response.json();
+    location.reload();
+    getComments();
 }
 
 /**
