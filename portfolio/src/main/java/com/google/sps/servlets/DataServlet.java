@@ -20,11 +20,10 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.gson.Gson;
 import java.util.Collections;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,28 +34,25 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/comments")
 public class DataServlet extends HttpServlet {
 
-    // arraylist which stores all past comments
-    protected List<String> comments;
-
     /** GET request pulls comments from datastore and prints on /comments page */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastore.prepare(query);
 
-        // initialize new arraylist every time so no duplicates
-        comments = new ArrayList<>();
+        // new arraylist everytime to keep thread safe
+        ArrayList<String> comments = new ArrayList<>();
         
-        // iterate through Query and add to arraylist
+        int requestedNumComments = getBoundedMaxComments(request);
+        System.out.println(requestedNumComments);
         for (Entity entity : results.asIterable()) {
-            String comment = (String) entity.getProperty("text");
-            comments.add(comment);
+            if (requestedNumComments > 0) {
+                String comment = (String) entity.getProperty("text");
+                comments.add(comment);
+                requestedNumComments--;
+            }
         }
-
-        // get only the requested max number of comments
-        comments = comments.subList(0, getBoundedMaxComments(request));
 
         // reverse order to oldest first
         Collections.reverse(comments);
@@ -64,22 +60,18 @@ public class DataServlet extends HttpServlet {
         // convert self object to json and print on /comment page
         Gson gson = new Gson();
         response.setContentType("application/json;");
-        response.getWriter().println(gson.toJson(this));
+        response.getWriter().println(gson.toJson(comments));
     }
 
-    /** Parses user-requested max number of comments and bound [0, num comments] with default 5 (if there are 5) */
+    /** Parses user-requested max number of comments, returned num is valid and positive */
     private int getBoundedMaxComments(HttpServletRequest request) {
         int requestedComments = 5;
+        int defaultComments = 5;
         String inputMaxComments = request.getParameter("max-comments");
         if (inputMaxComments != null) {
             requestedComments = Integer.parseInt(inputMaxComments);
         } 
-
-        int commentsLen = comments.size();
-        if (requestedComments > commentsLen && requestedComments >= 0) {
-            return commentsLen;
-        }
-        return requestedComments;
+        return ((requestedComments >= 0) ? requestedComments : defaultComments);
     }
 
     /** POST request sends new user-inputted comment to datastore */
@@ -88,18 +80,15 @@ public class DataServlet extends HttpServlet {
         String newComment = request.getParameter("user-comment");
         long currTime = System.currentTimeMillis();
 
-        // create datastore entity for new comment
         Entity commentEntity = new Entity("Comment");
         commentEntity.setProperty("text", newComment);
 
         // add timestamp for sorting
         commentEntity.setProperty("timestamp", currTime);
 
-        // put entity into datastore for access after reload
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.put(commentEntity);
 
-        // redirect back to comment page
         response.sendRedirect("/blog.html");
     }
 }
