@@ -12,50 +12,42 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random personal fact to the page.
- */
+/** Adds a random personal fact to the page. */
 function addRandomFact() {
     const FACTS =
         ['Dogs are (usually) better than cats.', 'Brooklyn 99 is one of the best shows of all time.', 'Milk is underrated.', 'I\'m a ravenclaw.'];
-
-    // Pick a random fact.
     const FACT = FACTS[Math.floor(Math.random() * FACTS.length)];
+    var factContainer = document.getElementById("fact-container");
 
-    // Add it to the page.
-    const FACT_CONTAINER = document.getElementById("fact-container");
-
-    FACT_CONTAINER.innerText = FACT;
+    factContainer.innerText = FACT;
 }
 
-/**
- * Fetches randomized greeting from /data and prints in index.html greeting-container
- */
-function getRandomGreeting() {
-    fetch("/data")
-        .then(greetingProm => {
-            return greetingProm.json();
-        })
-        .then(json => {
-            document.querySelector("#greeting-container").innerHTML = json;
-        })
+/** Fetches user comment and comment history to be displayed */
+async function getComments() {
+    var inputResponse = await fetch("/comments");
+    var servletJson = await inputResponse.json();
+    var commentContainer = document.getElementById("old-comments");
+    servletJson.forEach(line => {
+        commentContainer.appendChild(createListElement(line));
+    });
 }
 
-/**
- * Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively
- */
-fetch("header.html")
-    .then(response => {
-        return response.text();
-    })
-    .then(data => {
-        document.querySelector("header").innerHTML = data;
-    });
+/** Creates a <li> element containing text. (helper method borrowed from example file) */
+function createListElement(text) {
+    var liElement = document.createElement('li');
+    liElement.innerText = text;
+    return liElement;
+}
 
-fetch("footer.html")
-    .then(response => {
-        return response.text();
-    })
-    .then(data => {
-        document.querySelector("footer").innerHTML = data;
-    });
+/** Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively */
+async function loadHeaderFooter() {
+    var headerResponse = await fetch("header.html");
+    var headerData = await headerResponse.text();
+    document.querySelector("header").innerHTML = headerData;
+
+    var footerResponse = await fetch("footer.html");
+    var footerData = await footerResponse.text();
+    document.querySelector("footer").innerHTML = footerData;
+}
+
+loadHeaderFooter();
