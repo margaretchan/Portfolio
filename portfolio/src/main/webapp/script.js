@@ -24,9 +24,10 @@ function addRandomFact() {
 
 /** Fetches user comment and comment history to be displayed */
 async function getComments() {
-    var inputResponse = await fetch("/comments");
+    var inputResponse = await fetch("/comments/");
     var servletJson = await inputResponse.json();
     var commentContainer = document.getElementById("old-comments");
+    commentContainer.innerHTML = "";
     servletJson.forEach(line => {
         commentContainer.appendChild(createListElement(line));
     });
@@ -37,6 +38,12 @@ function createListElement(text) {
     var liElement = document.createElement('li');
     liElement.innerText = text;
     return liElement;
+}
+
+/** Clear all comments from datastore and clear comments on page */
+async function deleteComments() {
+    await fetch("/delete-data", {method: "POST"});
+    await getComments();
 }
 
 /** Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively */
