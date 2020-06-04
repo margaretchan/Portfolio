@@ -12,71 +12,49 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random personal fact to the page.
- */
+/** Adds a random personal fact to the page. */
 function addRandomFact() {
     const FACTS =
         ['Dogs are (usually) better than cats.', 'Brooklyn 99 is one of the best shows of all time.', 'Milk is underrated.', 'I\'m a ravenclaw.'];
-
-    // Pick a random fact.
     const FACT = FACTS[Math.floor(Math.random() * FACTS.length)];
+    var factContainer = document.getElementById("fact-container");
 
-    // Add it to the page.
-    const FACT_CONTAINER = document.getElementById("fact-container");
-
-    FACT_CONTAINER.innerText = FACT;
+    factContainer.innerText = FACT;
 }
 
-/**
- * Fetches user comment and comment history to be displayed
- */
-function getComments() {
-    fetch("/comments")
-        .then(inputProm => {
-            return inputProm.json();
-        })
-        .then(servletJson => {
-            const COMM_CONTAINER = document.getElementById("old-comments");
-            servletJson.comments.forEach((line) => {
-                COMM_CONTAINER.appendChild(createListElement(line));
-            });
-
-        })
+/** Fetches user comment and comment history to be displayed */
+async function getComments() {
+    var inputResponse = await fetch("/comments");
+    var servletJson = await inputResponse.json();
+    var commentContainer = document.getElementById("old-comments");
+    commentContainer.innerHTML = "";
+    servletJson.forEach(line => {
+        commentContainer.appendChild(createListElement(line));
+    });
 }
 
-/** 
- *  Creates a <li> element containing text. 
- *  (helper method borrowed from example file)
- */
+/** Creates a <li> element containing text. (helper method borrowed from example file) */
 function createListElement(text) {
     var liElement = document.createElement('li');
     liElement.innerText = text;
     return liElement;
 }
 
+/** Clear all comments from datastore and clear comments on page */
 async function deleteComments() {
-    var response = await fetch("/delete-data", {method: "POST"});
-    var json = await response.json();
-    location.reload();
-    getComments();
+    await fetch("/delete-data", {method: "POST"});
+    await getComments();
 }
 
-/**
- * Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively
- */
-fetch("header.html")
-    .then(response => {
-        return response.text();
-    })
-    .then(data => {
-        document.querySelector("header").innerHTML = data;
-    });
+/** Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively */
+async function loadHeaderFooter() {
+    var headerResponse = await fetch("header.html");
+    var headerData = await headerResponse.text();
+    document.querySelector("header").innerHTML = headerData;
 
-fetch("footer.html")
-    .then(response => {
-        return response.text();
-    })
-    .then(data => {
-        document.querySelector("footer").innerHTML = data;
-    });
+    var footerResponse = await fetch("footer.html");
+    var footerData = await footerResponse.text();
+    document.querySelector("footer").innerHTML = footerData;
+}
+
+loadHeaderFooter();
