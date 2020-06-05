@@ -31,6 +31,11 @@ body {
     margin-left: 50px;
 }
 
+.margin-top-50 {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
 .main-container {
     width: 1400px;
     margin: 0px auto;
