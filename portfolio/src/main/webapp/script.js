@@ -46,15 +46,35 @@ async function deleteComments() {
     await getComments();
 }
 
-async function getUploadUrl() {
+async function getBlobstoreUrl() {
     var response = await fetch("/upload-url/");
     var url = await response.text();
     var messageForm = document.getElementById("image-form");
     messageForm.action = url;
 }
 
+async function getBlobstoreImage() {
+    const response = await fetch("/file-handler/");
+    const imageJson = await response.json();
+
+    var imageContainer = document.getElementById("uploaded-images");
+    imageContainer.innerHTML = "";
+    imageJson.forEach(url => {
+        var node = document.createElement("IMG");
+        node.setAttribute("src", url)
+        imageContainer.appendChild(node);
+    });
+}
+
+function createImageElement(imageUrl) {
+    var liElement = document.createElement('li');
+    liElement.innerHTML = "<img src=\"" + imageUrl + "\" />";
+    return liElement;
+}
+
 function loadBlogPage() {
-    getUploadUrl();
+    getBlobstoreUrl();
+    getBlobstoreImage();
     getComments();
 }
 

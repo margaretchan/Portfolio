@@ -31,8 +31,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import com.google.gson.Gson;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -57,9 +59,25 @@ public class FileHandlerServlet extends HttpServlet {
         imageEntity.setProperty("url", imageUrl);
         datastore.put(imageEntity);
 
-        response.getWriter().println("<img src=\"" + imageUrl + "\" />");
-
         response.sendRedirect("/blog.html");
+    }
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Query query = new Query("Image");
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        PreparedQuery results = datastore.prepare(query);
+
+        List<String> imageUrls = new ArrayList<>();
+        for (Entity entity : results.asIterable()) {
+            String url = (String) entity.getProperty("url");
+            imageUrls.add(url);
+        }
+
+        Gson gson = new Gson();
+        response.setContentType("application/json;");
+        response.getWriter().println(gson.toJson(imageUrls));
+
     }
 
     /** Returns a URL that points to the uploaded file, or null if the user didn't upload a file. 
@@ -79,7 +97,7 @@ public class FileHandlerServlet extends HttpServlet {
         BlobKey blobKey = blobKeys.get(0);
 
         // User submitted form without selecting a file, so we can't get a URL. (live server)
-        // or user did not submit jpeg
+        // or user did not submit image type 
         BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
         if (blobInfo.getSize() == 0 || !blobInfo.getContentType().startsWith("image")) {
             blobstoreService.delete(blobKey);

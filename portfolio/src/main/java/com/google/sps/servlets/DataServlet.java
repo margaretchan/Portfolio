@@ -49,7 +49,7 @@ public class DataServlet extends HttpServlet {
             comments.add(comment);
         }
 
-        // convert self object to json and print on /comment page
+        // convert comments to json and print on /comment page
         Gson gson = new Gson();
         response.setContentType("application/json;");
         response.getWriter().println(gson.toJson(comments));
