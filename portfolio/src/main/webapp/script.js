@@ -46,6 +46,7 @@ async function deleteComments() {
     await getComments();
 }
 
+/** Set action of image-form to blobstore assigned url */
 async function getBlobstoreUrl() {
     var response = await fetch("/upload-url/");
     var url = await response.text();
@@ -53,6 +54,7 @@ async function getBlobstoreUrl() {
     messageForm.action = url;
 }
 
+/** Print uploaded images to page */
 async function getBlobstoreImage() {
     const response = await fetch("/file-handler/");
     const imageJson = await response.json();
