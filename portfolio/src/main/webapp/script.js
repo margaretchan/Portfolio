@@ -66,12 +66,6 @@ async function getBlobstoreImage() {
     });
 }
 
-function createImageElement(imageUrl) {
-    var liElement = document.createElement('li');
-    liElement.innerHTML = "<img src=\"" + imageUrl + "\" />";
-    return liElement;
-}
-
 function loadBlogPage() {
     getBlobstoreUrl();
     getBlobstoreImage();
