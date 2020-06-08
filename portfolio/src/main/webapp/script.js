@@ -56,8 +56,8 @@ async function getBlobstoreUrl() {
 
 /** Print uploaded images to page */
 async function getBlobstoreImage() {
-    const response = await fetch("/file-handler/");
-    const imageJson = await response.json();
+    var response = await fetch("/file-handler/");
+    var imageJson = await response.json();
 
     var imageContainer = document.getElementById("uploaded-images");
     imageContainer.innerHTML = "";
