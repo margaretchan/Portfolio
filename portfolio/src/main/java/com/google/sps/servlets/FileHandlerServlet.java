@@ -14,6 +14,11 @@
 
 package com.google.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.blobstore.BlobInfo;
 import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
@@ -38,15 +43,23 @@ import javax.servlet.http.HttpServletResponse;
  * to this servlet. This servlet can then process the request using the file URL we get from
  * Blobstore.
  */
-@WebServlet("/file-handler")
+@WebServlet("/file-handler/")
 public class FileHandlerServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String caption = request.getParameter("caption");
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        Entity imageEntity = new Entity("Image");
+
         String imageUrl = getUploadedFileUrl(request, "image");
 
-        
+        imageEntity.setProperty("caption", request.getParameter("caption"));
+        imageEntity.setProperty("url", imageUrl);
+        datastore.put(imageEntity);
+
+        response.getWriter().println("<img src=\"" + imageUrl + "\" />");
+
+        response.sendRedirect("/blog.html");
     }
 
     /** Returns a URL that points to the uploaded file, or null if the user didn't upload a file. 
@@ -59,21 +72,19 @@ public class FileHandlerServlet extends HttpServlet {
 
         // User submitted form without selecting a file, so we can't get a URL. (dev server)
         if (blobKeys == null || blobKeys.isEmpty()) {
-        return null;
+            return null;
         }
 
         // Our form only contains a single file input, so get the first index.
         BlobKey blobKey = blobKeys.get(0);
 
         // User submitted form without selecting a file, so we can't get a URL. (live server)
+        // or user did not submit jpeg
         BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
-        if (blobInfo.getSize() == 0) {
-        blobstoreService.delete(blobKey);
-        return null;
+        if (blobInfo.getSize() == 0 || !blobInfo.getContentType().startsWith("image")) {
+            blobstoreService.delete(blobKey);
+            return null;
         }
-
-        // We could check the validity of the file here, e.g. to make sure it's an image file
-        // https://stackoverflow.com/q/10779564/873165
 
         // Use ImagesService to get a URL that points to the uploaded file.
         ImagesService imagesService = ImagesServiceFactory.getImagesService();
@@ -82,10 +93,10 @@ public class FileHandlerServlet extends HttpServlet {
         // To support running in Google Cloud Shell with AppEngine's devserver, we must use the relative
         // path to the image, rather than the path returned by imagesService which contains a host.
         try {
-        URL url = new URL(imagesService.getServingUrl(options));
-        return url.getPath();
+            URL url = new URL(imagesService.getServingUrl(options));
+            return url.getPath();
         } catch (MalformedURLException e) {
-        return imagesService.getServingUrl(options);
+            return imagesService.getServingUrl(options);
         }
     }
 }

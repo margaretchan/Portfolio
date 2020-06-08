@@ -46,6 +46,18 @@ async function deleteComments() {
     await getComments();
 }
 
+async function getUploadUrl() {
+    var response = await fetch("/upload-url/");
+    var url = await response.text();
+    var messageForm = document.getElementById("image-form");
+    messageForm.action = url;
+}
+
+function loadBlogPage() {
+    getUploadUrl();
+    getComments();
+}
+
 /** Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively */
 async function loadHeaderFooter() {
     var headerResponse = await fetch("header.html");

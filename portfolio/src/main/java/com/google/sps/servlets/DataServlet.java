@@ -22,6 +22,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,7 +42,7 @@ public class DataServlet extends HttpServlet {
         PreparedQuery results = datastore.prepare(query);
 
         // new arraylist everytime to keep thread safe
-        ArrayList<String> comments = new ArrayList<>();
+        List<String> comments = new ArrayList<>();
         
         for (Entity entity : results.asIterable()) {
             String comment = (String) entity.getProperty("text");
