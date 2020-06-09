@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const COMMENTS_URL_KEY = "comments=";
+const MAX_COMMENTS_URL_KEY = "max-comments=";
+
 /** Adds a random personal fact to the page. */
 function addRandomFact() {
     const FACTS =
@@ -27,12 +30,12 @@ function addRandomFact() {
  */
 async function setMaxComments() {
     var commentLimit = document.getElementById("comment-limit");
-    var response = await fetch("/comments?max-comments=" + commentLimit.value);
+    var response = await fetch("/comments?" + MAX_COMMENTS_URL_KEY + commentLimit.value);
 
     printCommentsfromJson(await response.json());
 
     // save number of requested comments in url to preserve after refresh
-    window.history.pushState("", "", "/blog.html?comments=" + commentLimit.value);
+    window.history.pushState("", "", "/blog.html?" + COMMENTS_URL_KEY + commentLimit.value);
 }
 
 /** Fetches user comment and comment history to be displayed */
@@ -40,9 +43,9 @@ async function getComments() {
     var url = window.location.href;
 
     var response;
-    if (url.includes("comments=")) {
-        var prevRequestedComments = parseInt(url[url.indexOf("comments=") + "comments=".length]);
-        response = await fetch("/comments?max-comments=" + prevRequestedComments);
+    if (url.includes(COMMENTS_URL_KEY)) {
+        var prevRequestedComments = parseInt(url[url.indexOf(COMMENTS_URL_KEY) + COMMENTS_URL_KEY.length]);
+        response = await fetch("/comments?" + MAX_COMMENTS_URL_KEY + prevRequestedComments);
         document.getElementById("comment-limit").value = prevRequestedComments;
     } else {
         response = await fetch("/comments");
