@@ -67,9 +67,8 @@ public class DataServlet extends HttpServlet {
             requestedComments = Integer.parseInt(request.getParameter("max-comments"));
         } catch (NumberFormatException e) { 
             System.out.println("Number of comments requested is invalid. " + e + ", was expecting int");
-            // TODO(margaret): display error message to user  
+            // TODO(margaret): display error message to user
         }
-
         return (requestedComments >= 0) ? requestedComments : DEFAULT_NUM_COMMENTS;
     }
 

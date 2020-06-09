@@ -25,27 +25,37 @@ function addRandomFact() {
 /**
  * Fetches user-inputted comment limit and comment history to be displayed
  */
-function setMaxComments() {
-    const COMM_LIMIT = document.getElementById("comment-limit");
-    fetch("/comments?max-comments=" + COMM_LIMIT.value)
-        .then(inputProm => {
-            return inputProm.json();
-        })
-        .then(servletJson => {
-            const COMM_CONTAINER = document.getElementById("old-comments");
-            COMM_CONTAINER.innerHTML = "";
-                servletJson.forEach((line) => {
-                    COMM_CONTAINER.appendChild(createListElement(line));
-                });
-        })
+async function setMaxComments() {
+    var commentLimit = document.getElementById("comment-limit");
+    var response = await fetch("/comments?max-comments=" + commentLimit.value);
+
+    printCommentsfromJson(await response.json());
+
+    // save number of requested comments in url to preserve after refresh
+    window.history.pushState("", "", "/blog.html?comments=" + commentLimit.value);
 }
 
 /** Fetches user comment and comment history to be displayed */
 async function getComments() {
-    var inputResponse = await fetch("/comments");
-    var servletJson = await inputResponse.json();
+    var url = window.location.href;
+
+    var response;
+    if (url.includes("comments=")) {
+        var prevRequestedComments = parseInt(url[url.indexOf("comments=") + "comments=".length]);
+        response = await fetch("/comments?max-comments=" + prevRequestedComments);
+        document.getElementById("comment-limit").value = prevRequestedComments;
+    } else {
+        response = await fetch("/comments");
+    }
+
+    printCommentsfromJson(await response.json());
+}
+
+/** adds comments from json to html on page */
+function printCommentsfromJson(json) {
     var commentContainer = document.getElementById("old-comments");
-    servletJson.forEach(line => {
+    commentContainer.innerHTML = "";
+    json.forEach(line => {
         commentContainer.appendChild(createListElement(line));
     });
 }
