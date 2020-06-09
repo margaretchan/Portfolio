@@ -45,26 +45,41 @@ import javax.servlet.http.HttpServletResponse;
  * to this servlet. This servlet can then process the request using the file URL we get from
  * Blobstore.
  */
-@WebServlet("/file-handler/")
+@WebServlet("/file-handler")
 public class FileHandlerServlet extends HttpServlet {
+
+    static final String IMAGE_DATASTORE_KEY = "Image";
+    static final String ACCEPTABLE_CONTENT_TYPE = "image";
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        Entity imageEntity = new Entity("Image");
+        Entity imageEntity = new Entity(IMAGE_DATASTORE_KEY);
 
-        String imageUrl = getUploadedFileUrl(request, "image");
+        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+        Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
+        List<BlobKey> blobKeys = blobs.get(IMAGE_DATASTORE_KEY);
 
-        imageEntity.setProperty("caption", request.getParameter("caption"));
-        imageEntity.setProperty("url", imageUrl);
-        datastore.put(imageEntity);
+        if (blobKeys != null && !blobKeys.isEmpty()) {
+            BlobKey blobKey = blobKeys.get(0);
+            BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
+
+            if (blobInfo.getSize() == 0 || !blobInfo.getContentType().startsWith(ACCEPTABLE_CONTENT_TYPE)) {
+                blobstoreService.delete(blobKey);
+            } else {
+                String imageUrl = getUrlfromKey(blobKey).getPath();
+                imageEntity.setProperty("caption", request.getParameter("caption"));
+                imageEntity.setProperty("url", imageUrl);
+                datastore.put(imageEntity);
+            }
+        }
 
         response.sendRedirect("/blog.html");
     }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Query query = new Query("Image");
+        Query query = new Query(IMAGE_DATASTORE_KEY);
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastore.prepare(query);
 
@@ -80,41 +95,17 @@ public class FileHandlerServlet extends HttpServlet {
 
     }
 
-    /** Returns a URL that points to the uploaded file, or null if the user didn't upload a file. 
-      * (method borrowed from examples)
+    /** Returns a URL that points to the uploaded file key
+      * precondition: the blobKey exists (is non-null)
       */
-    private String getUploadedFileUrl(HttpServletRequest request, String formInputElementName) {
-        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-        Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
-        List<BlobKey> blobKeys = blobs.get("image");
-
-        // User submitted form without selecting a file, so we can't get a URL. (dev server)
-        if (blobKeys == null || blobKeys.isEmpty()) {
-            return null;
-        }
-
-        // Our form only contains a single file input, so get the first index.
-        BlobKey blobKey = blobKeys.get(0);
-
-        // User submitted form without selecting a file, so we can't get a URL. (live server)
-        // or user did not submit image type 
-        BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
-        if (blobInfo.getSize() == 0 || !blobInfo.getContentType().startsWith("image")) {
-            blobstoreService.delete(blobKey);
-            return null;
-        }
-
-        // Use ImagesService to get a URL that points to the uploaded file.
+    private URL getUrlfromKey(BlobKey blobKey) throws MalformedURLException {
         ImagesService imagesService = ImagesServiceFactory.getImagesService();
         ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
 
-        // To support running in Google Cloud Shell with AppEngine's devserver, we must use the relative
-        // path to the image, rather than the path returned by imagesService which contains a host.
         try {
-            URL url = new URL(imagesService.getServingUrl(options));
-            return url.getPath();
+            return new URL(imagesService.getServingUrl(options));
         } catch (MalformedURLException e) {
-            return imagesService.getServingUrl(options);
+            throw e;
         }
     }
 }

@@ -26,13 +26,13 @@ import javax.servlet.http.HttpServletResponse;
  * When the fetch() function requests the /upload-url URL, the content of the response is
  * the URL that allows a user to upload a file to Blobstore.
  */
-@WebServlet("/upload-url/")
+@WebServlet("/upload-url")
 public class UploadUrlServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-    String uploadUrl = blobstoreService.createUploadUrl("/file-handler/");
+    String uploadUrl = blobstoreService.createUploadUrl("/file-handler");
 
     response.setContentType("text/html");
     response.getWriter().println(uploadUrl);

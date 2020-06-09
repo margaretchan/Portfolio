@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet responsible for listing comments */
-@WebServlet("/comments/")
+@WebServlet("/comments")
 public class DataServlet extends HttpServlet {
 
     /** GET request pulls comments from datastore and prints on /comments page */

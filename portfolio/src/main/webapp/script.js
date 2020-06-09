@@ -24,7 +24,7 @@ function addRandomFact() {
 
 /** Fetches user comment and comment history to be displayed */
 async function getComments() {
-    var inputResponse = await fetch("/comments/");
+    var inputResponse = await fetch("/comments");
     var servletJson = await inputResponse.json();
     var commentContainer = document.getElementById("old-comments");
     commentContainer.innerHTML = "";
@@ -48,7 +48,7 @@ async function deleteComments() {
 
 /** Set action of image-form to blobstore assigned url */
 async function getBlobstoreUrl() {
-    var response = await fetch("/upload-url/");
+    var response = await fetch("/upload-url");
     var url = await response.text();
     var messageForm = document.getElementById("image-form");
     messageForm.action = url;
@@ -56,7 +56,7 @@ async function getBlobstoreUrl() {
 
 /** Print uploaded images to page */
 async function getBlobstoreImage() {
-    var response = await fetch("/file-handler/");
+    var response = await fetch("/file-handler");
     var imageJson = await response.json();
 
     var imageContainer = document.getElementById("uploaded-images");
