@@ -46,6 +46,13 @@ async function deleteComments() {
     await getComments();
 }
 
+/** Loads google map onto about page */
+function loadMap() {
+    var map = new google.maps.Map(
+      document.getElementById("map-container"),
+      {center: {lat: 37.422, lng: -122.084}, zoom: 16});
+}
+
 /** Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively */
 async function loadHeaderFooter() {
     var headerResponse = await fetch("header.html");

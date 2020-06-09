@@ -126,6 +126,12 @@ ul {
     position: fixed;
 }
 
+.map {
+    border:black;
+    width: 750px;
+    height: 750px;
+}
+
 header, footer {
     background-color: transparent;
     font-family: "Raleway", Garamond, Helvetica, Arial, sans-serif;
