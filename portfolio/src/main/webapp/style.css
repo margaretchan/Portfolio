@@ -131,6 +131,10 @@ ul {
     position: fixed;
 }
 
+#old-comments {
+    width: 300px;
+}
+
 header, footer {
     background-color: transparent;
     font-family: "Raleway", Garamond, Helvetica, Arial, sans-serif;
