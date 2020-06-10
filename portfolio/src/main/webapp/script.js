@@ -76,6 +76,34 @@ async function deleteComments() {
     await getComments();
 }
 
+/** Set action of image-form to blobstore assigned url */
+async function getBlobstoreUrl() {
+    var response = await fetch("/upload-url");
+    var url = await response.text();
+    var messageForm = document.getElementById("image-form");
+    messageForm.action = url;
+}
+
+/** Print uploaded images to page */
+async function getBlobstoreImage() {
+    var response = await fetch("/file-handler");
+    var imageJson = await response.json();
+
+    var imageContainer = document.getElementById("uploaded-images");
+    imageContainer.innerHTML = "";
+    imageJson.forEach(url => {
+        var node = document.createElement("IMG");
+        node.setAttribute("src", url)
+        imageContainer.appendChild(node);
+    });
+}
+
+function loadBlogPage() {
+    getBlobstoreUrl();
+    getBlobstoreImage();
+    getComments();
+}
+
 /** Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively */
 async function loadHeaderFooter() {
     var headerResponse = await fetch("header.html");

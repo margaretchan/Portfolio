@@ -46,15 +46,15 @@ public class DataServlet extends HttpServlet {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastore.prepare(query);
 
-        // new arraylist everytime to keep thread safe
+        // new arraylist every time to keep thread-safe
         List<String> comments = new ArrayList<>();
         List<Entity> resultsList = results.asList(FetchOptions.Builder.withLimit(100)); 
-
+        
         for (int i = Math.min(getMaxComments(request), resultsList.size()) - 1; i >= 0; i--) {
             comments.add((String) resultsList.get(i).getProperty("text"));
         }
 
-        // convert self object to json and print on /comment page
+        // convert comments to json and print on /comment page
         Gson gson = new Gson();
         response.setContentType("application/json;");
         response.getWriter().println(gson.toJson(comments));
