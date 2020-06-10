@@ -48,9 +48,13 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/file-handler")
 public class FileHandlerServlet extends HttpServlet {
 
-    static final String IMAGE_DATASTORE_KEY = "Image";
-    static final String ACCEPTABLE_CONTENT_TYPE = "image";
+    private static final String IMAGE_DATASTORE_KEY = "Image";
+    private static final String ACCEPTABLE_CONTENT_TYPE = "image";
 
+    /**
+     * Attempts to put image uploaded to blobstore into datastore. Removes blob from blobstore 
+     * if blob is empty or is not an image file type.
+     */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -60,11 +64,13 @@ public class FileHandlerServlet extends HttpServlet {
         Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
         List<BlobKey> blobKeys = blobs.get(IMAGE_DATASTORE_KEY);
 
+        // Following pattern in docs https://cloud.google.com/appengine/docs/standard/java/blobstore#3_implement_upload_handler
         if (blobKeys != null && !blobKeys.isEmpty()) {
             BlobKey blobKey = blobKeys.get(0);
             BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
 
             if (blobInfo.getSize() == 0 || !blobInfo.getContentType().startsWith(ACCEPTABLE_CONTENT_TYPE)) {
+                // Delete blob immediately to prevent it from being orphaned
                 blobstoreService.delete(blobKey);
             } else {
                 String imageUrl = getUrlfromKey(blobKey).getPath();
@@ -77,6 +83,9 @@ public class FileHandlerServlet extends HttpServlet {
         response.sendRedirect("/blog.html");
     }
 
+    /**
+     * Gets all blobstore image urls from datastore and prints json containing urls to response
+     */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Query query = new Query(IMAGE_DATASTORE_KEY);
@@ -92,20 +101,16 @@ public class FileHandlerServlet extends HttpServlet {
         Gson gson = new Gson();
         response.setContentType("application/json;");
         response.getWriter().println(gson.toJson(imageUrls));
-
     }
 
-    /** Returns a URL that points to the uploaded file key
-      * precondition: the blobKey exists (is non-null)
-      */
+    /** 
+     * Returns a URL that points to the uploaded file key
+     * precondition: the blobKey exists (is non-null)
+     */
     private URL getUrlfromKey(BlobKey blobKey) throws MalformedURLException {
         ImagesService imagesService = ImagesServiceFactory.getImagesService();
         ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
 
-        try {
-            return new URL(imagesService.getServingUrl(options));
-        } catch (MalformedURLException e) {
-            throw e;
-        }
+        return new URL(imagesService.getServingUrl(options));
     }
 }

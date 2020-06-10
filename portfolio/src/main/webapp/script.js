@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const COMMENTS_URL_KEY = "comments=";
+const MAX_COMMENTS_URL_KEY = "max-comments=";
+
 /** Adds a random personal fact to the page. */
 function addRandomFact() {
     const FACTS =
@@ -22,13 +25,40 @@ function addRandomFact() {
     factContainer.innerText = FACT;
 }
 
+/**
+ * Fetches user-inputted comment limit and comment history to be displayed
+ */
+async function setMaxComments() {
+    var commentLimit = document.getElementById("comment-limit");
+    var response = await fetch("/comments?" + MAX_COMMENTS_URL_KEY + commentLimit.value);
+
+    printCommentsfromJson(await response.json());
+
+    // save number of requested comments in url to preserve after refresh
+    window.history.pushState("", "", "/blog.html?" + COMMENTS_URL_KEY + commentLimit.value);
+}
+
 /** Fetches user comment and comment history to be displayed */
 async function getComments() {
-    var inputResponse = await fetch("/comments");
-    var servletJson = await inputResponse.json();
+    var url = window.location.href;
+
+    var response;
+    if (url.includes(COMMENTS_URL_KEY)) {
+        var prevRequestedComments = parseInt(url[url.indexOf(COMMENTS_URL_KEY) + COMMENTS_URL_KEY.length]);
+        response = await fetch("/comments?" + MAX_COMMENTS_URL_KEY + prevRequestedComments);
+        document.getElementById("comment-limit").value = prevRequestedComments;
+    } else {
+        response = await fetch("/comments");
+    }
+
+    printCommentsfromJson(await response.json());
+}
+
+/** adds comments from json to html on page */
+function printCommentsfromJson(json) {
     var commentContainer = document.getElementById("old-comments");
     commentContainer.innerHTML = "";
-    servletJson.forEach(line => {
+    json.forEach(line => {
         commentContainer.appendChild(createListElement(line));
     });
 }
