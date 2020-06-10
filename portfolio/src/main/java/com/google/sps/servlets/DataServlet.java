@@ -20,8 +20,13 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.FetchOptions.Builder;
 import com.google.gson.Gson;
+import java.util.Collections;
 import java.util.ArrayList;
+import java.util.List;
+import java.lang.Math;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,23 +34,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet responsible for listing comments */
-@WebServlet("/comments/")
+@WebServlet("/comments")
 public class DataServlet extends HttpServlet {
+
+    private static final int DEFAULT_NUM_COMMENTS = 5;
 
     /** GET request pulls comments from datastore and prints on /comments page */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Query query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
-
+        Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastore.prepare(query);
 
         // new arraylist everytime to keep thread safe
-        ArrayList<String> comments = new ArrayList<>();
-        
-        for (Entity entity : results.asIterable()) {
-            String comment = (String) entity.getProperty("text");
-            comments.add(comment);
+        List<String> comments = new ArrayList<>();
+        List<Entity> resultsList = results.asList(FetchOptions.Builder.withLimit(100)); 
+
+        for (int i = Math.min(getMaxComments(request), resultsList.size()) - 1; i >= 0; i--) {
+            comments.add((String) resultsList.get(i).getProperty("text"));
         }
 
         // convert self object to json and print on /comment page
@@ -54,20 +60,30 @@ public class DataServlet extends HttpServlet {
         response.getWriter().println(gson.toJson(comments));
     }
 
+    /** Parses user-requested max number of comments, defaults to DEFAULT_NUM_COMMENTS */
+    private int getMaxComments(HttpServletRequest request) {
+        int requestedComments = DEFAULT_NUM_COMMENTS;
+        try {
+            requestedComments = Integer.parseInt(request.getParameter("max-comments"));
+        } catch (NumberFormatException e) { 
+            System.out.println("Invalid input for number of comments requested: " + e.getMessage());
+            // TODO(margaret): display error message to user
+        }
+        return (requestedComments >= 0) ? requestedComments : DEFAULT_NUM_COMMENTS;
+    }
+
     /** POST request sends new user-inputted comment to datastore */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String newComment = request.getParameter("user-comment");
         long currTime = System.currentTimeMillis();
 
-        // create datastore entity for new comment
         Entity commentEntity = new Entity("Comment");
         commentEntity.setProperty("text", newComment);
 
         // add timestamp for sorting
         commentEntity.setProperty("timestamp", currTime);
 
-        // put entity into datastore for access after reload
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.put(commentEntity);
 
