@@ -70,6 +70,12 @@ function createListElement(text) {
     return liElement;
 }
 
+/** Clear all comments from datastore and clear comments on page */
+async function deleteComments() {
+    await fetch("/delete-data", {method: "POST"});
+    await getComments();
+}
+
 /** Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively */
 async function loadHeaderFooter() {
     var headerResponse = await fetch("header.html");
