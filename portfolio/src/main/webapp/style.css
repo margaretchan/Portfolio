@@ -131,6 +131,12 @@ ul {
     position: fixed;
 }
 
+.map {
+    border:black;
+    width: 750px;
+    height: 750px;
+}
+
 #old-comments {
     width: 300px;
 }

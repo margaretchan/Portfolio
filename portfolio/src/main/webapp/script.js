@@ -76,6 +76,13 @@ async function deleteComments() {
     await getComments();
 }
 
+/** Loads google map onto about page */
+function loadMap() {
+    var map = new google.maps.Map(
+      document.getElementById("map-container"),
+      {center: {lat: 37.422, lng: -122.084}, zoom: 16});
+}
+
 /** Set action of image-form to blobstore assigned url */
 async function getBlobstoreUrl() {
     var response = await fetch("/upload-url");
