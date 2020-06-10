@@ -48,9 +48,10 @@ async function deleteComments() {
 
 /** Loads google map onto about page */
 function loadMap() {
-    var map = new google.maps.Map(
-      document.getElementById("map-container"),
-      {center: {lat: 37.422, lng: -122.084}, zoom: 16});
+    var map = new google.maps.Map(document.getElementById("map-container"), {
+        center: {lat: 42.447894, lng: -76.487967}, 
+        zoom: 16, 
+        mapTypeId: "roadmap"});
 }
 
 /** Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively */
