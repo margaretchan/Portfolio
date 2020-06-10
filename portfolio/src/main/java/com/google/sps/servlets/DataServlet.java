@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/comments")
 public class DataServlet extends HttpServlet {
 
-    static final int DEFAULT_NUM_COMMENTS = 5;
+    private static final int DEFAULT_NUM_COMMENTS = 5;
 
     /** GET request pulls comments from datastore and prints on /comments page */
     @Override
@@ -47,7 +47,7 @@ public class DataServlet extends HttpServlet {
         PreparedQuery results = datastore.prepare(query);
 
         // new arraylist everytime to keep thread safe
-        ArrayList<String> comments = new ArrayList<>();
+        List<String> comments = new ArrayList<>();
         List<Entity> resultsList = results.asList(FetchOptions.Builder.withLimit(100)); 
 
         for (int i = Math.min(getMaxComments(request), resultsList.size()) - 1; i >= 0; i--) {
@@ -66,7 +66,7 @@ public class DataServlet extends HttpServlet {
         try {
             requestedComments = Integer.parseInt(request.getParameter("max-comments"));
         } catch (NumberFormatException e) { 
-            System.out.println("Number of comments requested is invalid. " + e + ", was expecting int");
+            System.out.println("Invalid input for number of comments requested: " + e.getMessage());
             // TODO(margaret): display error message to user
         }
         return (requestedComments >= 0) ? requestedComments : DEFAULT_NUM_COMMENTS;
