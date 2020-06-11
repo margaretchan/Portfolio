@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const MAP_INIT_LAT = 42.446263;
+const MAP_INIT_LNG = -76.482551;
+
 /** Adds a random personal fact to the page. */
 function addRandomFact() {
     const FACTS =
@@ -46,12 +49,29 @@ async function deleteComments() {
     await getComments();
 }
 
-/** Loads google map onto about page */
-function loadMap() {
+/** Loads google map onto about page with location markers from location-data-ithaca.csv file*/
+async function loadMap() {
+    var response = await fetch("/location-data", {method: "GET"});
+    var locations = await response.json();
+
     var map = new google.maps.Map(document.getElementById("map-container"), {
-        center: {lat: 42.447894, lng: -76.487967}, 
+        center: {lat: MAP_INIT_LAT, lng: MAP_INIT_LNG},
         zoom: 16, 
         mapTypeId: "roadmap"});
+    
+    console.log(locations);
+
+    locations.forEach( (location) => {
+        var marker = new google.maps.Marker(
+          {position: {lat: location.lat, lng: location.lng}, map: map});
+
+        var infoWindow = new google.maps.InfoWindow(
+            {content: "<h4>" + location.name + "</h4><p>" + location.description + "</p>"});
+
+        marker.addListener("click", function() {
+            infoWindow.open(map, marker);
+        });
+    });
 }
 
 /** Fills all <header> and <footer> tags with the content in header.html and footer.html, respectively */

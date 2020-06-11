@@ -16,11 +16,10 @@ package com.google.sps.servlets;
 
 import com.google.gson.Gson;
 import com.google.sps.data.Location;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,18 +30,21 @@ public class LocationDataServlet extends HttpServlet{
     
     private static final String CSV_FILE_PATH = "/WEB-INF/location-data-ithaca.csv";
 
+    // This list is thread-safe since it is only written to once in init() when the servlet is created.
+    // All subsequent reads can only occour after the init() had completed execution.
     private List<Location> locations;
 
     @Override
     public void init () {
         locations = new ArrayList<>();
-
-        BufferedReader csvReader = new BufferedReader(new FileReader(CSV_FILE_PATH));
-        while (line = csvReader.readLine() != null) {
+        Scanner scanner = new Scanner(getServletContext().getResourceAsStream("/WEB-INF/location-data-ithaca.csv"));
+        
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
             String[] values = line.split(",");
-            locations.add(new UfoSighting(Double.parseDouble(values[0]), Double.parseDouble(values[1]), values[2], values[3]));
+            locations.add(new Location(Double.parseDouble(values[0]), Double.parseDouble(values[1]), values[2], values[3]));
         }
-        csvReader.close();
+        scanner.close();
     }
 
     @Override
@@ -50,7 +52,6 @@ public class LocationDataServlet extends HttpServlet{
         response.setContentType("application/json");
         Gson gson = new Gson();
 
-        // This read should be thread safe since the write only happens once in init() when the servlet is created 
         response.getWriter().println(gson.toJson(locations));
     }
 }
