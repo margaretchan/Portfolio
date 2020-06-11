@@ -17,13 +17,13 @@ package com.google.sps.servlets;
 import com.google.gson.Gson;
 import com.google.sps.data.Location;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 @WebServlet("/location-data")
 public class LocationDataServlet extends HttpServlet{
@@ -32,18 +32,19 @@ public class LocationDataServlet extends HttpServlet{
 
     // This list is thread-safe since it is only written to once in init() when the servlet is created.
     // All subsequent reads can only occour after the init() had completed execution.
-    private List<Location> locations;
+    private static ImmutableList<Location> locations;
 
     @Override
     public void init () {
-        locations = new ArrayList<>();
+        ImmutableList.Builder builder = new ImmutableList.Builder<Location>();
         Scanner scanner = new Scanner(getServletContext().getResourceAsStream("/WEB-INF/location-data-ithaca.csv"));
         
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             String[] values = line.split(",");
-            locations.add(new Location(Double.parseDouble(values[0]), Double.parseDouble(values[1]), values[2], values[3]));
+            builder.add(new Location(Double.parseDouble(values[0]), Double.parseDouble(values[1]), values[2], values[3]));
         }
+        locations = builder.build();
         scanner.close();
     }
 
