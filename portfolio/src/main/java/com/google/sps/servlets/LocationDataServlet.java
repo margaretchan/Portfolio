@@ -32,7 +32,7 @@ public class LocationDataServlet extends HttpServlet{
 
     // This list is thread-safe since it is only written to once in init() when the servlet is created.
     // All subsequent reads can only occour after the init() had completed execution.
-    private static ImmutableList<Location> locations;
+    private ImmutableList<Location> locations;
 
     @Override
     public void init () {
