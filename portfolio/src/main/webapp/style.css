@@ -31,6 +31,11 @@ body {
     margin-left: 50px;
 }
 
+.margin-top-50 {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
 .main-container {
     width: 1400px;
     margin: 0px auto;
@@ -130,6 +135,10 @@ ul {
     border:black;
     width: 750px;
     height: 750px;
+}
+
+#old-comments {
+    width: 300px;
 }
 
 header, footer {
