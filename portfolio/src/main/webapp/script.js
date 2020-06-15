@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Starting center of map in Ithaca, NY
 const MAP_INIT_LAT = 42.446263;
 const MAP_INIT_LNG = -76.482551;
 

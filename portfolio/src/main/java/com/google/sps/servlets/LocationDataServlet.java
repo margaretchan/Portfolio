@@ -36,13 +36,18 @@ public class LocationDataServlet extends HttpServlet{
 
     @Override
     public void init () {
-        ImmutableList.Builder builder = new ImmutableList.Builder<Location>();
+        ImmutableList.Builder builder = new ImmutableList.Builder<>();
         Scanner scanner = new Scanner(getServletContext().getResourceAsStream("/WEB-INF/location-data-ithaca.csv"));
         
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             String[] values = line.split(",");
-            builder.add(new Location(Double.parseDouble(values[0]), Double.parseDouble(values[1]), values[2], values[3]));
+
+            double lat = Double.parseDouble(values[0]);
+            double lng = Double.parseDouble(values[1]);
+            String name = values[2];
+            String description = values[3];
+            builder.add(new Location(lat, lng, name, description));
         }
         locations = builder.build();
         scanner.close();
