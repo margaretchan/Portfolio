@@ -52,7 +52,7 @@ public final class FindMeetingQuery {
             }
         });
 
-        if (eventsList.size() == 0) {
+        if (eventsList.isEmpty()) {
             sufficientTime(TimeRange.START_OF_DAY, TimeRange.END_OF_DAY, duration, 
                             possibleTimes, true);
         } else {
