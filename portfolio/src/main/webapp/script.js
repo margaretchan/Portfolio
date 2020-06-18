@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Starting center of map in Ithaca, NY
+const MAP_INIT_LAT = 42.446263;
+const MAP_INIT_LNG = -76.482551;
+
 const COMMENTS_URL_KEY = "comments=";
 const MAX_COMMENTS_URL_KEY = "max-comments=";
 
@@ -76,11 +80,29 @@ async function deleteComments() {
     await getComments();
 }
 
-/** Loads google map onto about page */
-function loadMap() {
-    var map = new google.maps.Map(
-      document.getElementById("map-container"),
-      {center: {lat: 37.422, lng: -122.084}, zoom: 16});
+/** Loads google map onto about page with location markers from location-data-ithaca.csv file*/
+async function loadMap() {
+    var response = await fetch("/location-data", {method: "GET"});
+    var locations = await response.json();
+
+    var map = new google.maps.Map(document.getElementById("map-container"), {
+        center: {lat: MAP_INIT_LAT, lng: MAP_INIT_LNG},
+        zoom: 16, 
+        mapTypeId: "roadmap"});
+    
+    console.log(locations);
+
+    locations.forEach( (location) => {
+        var marker = new google.maps.Marker(
+          {position: {lat: location.lat, lng: location.lng}, map: map});
+
+        var infoWindow = new google.maps.InfoWindow(
+            {content: "<h4>" + location.name + "</h4><p>" + location.description + "</p>"});
+
+        marker.addListener("click", function() {
+            infoWindow.open(map, marker);
+        });
+    });
 }
 
 /** Set action of image-form to blobstore assigned url */
